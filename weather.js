@@ -1,5 +1,6 @@
 var baseUrl = "https://api.weatherbit.io/v2.0/current"; 
 var appKey = "2f44351d92264d93bdae8135ffaf6ab1";
+var degree;
 
 let lat
 let lon
@@ -21,6 +22,22 @@ function setIcon(imageName) {
     document.getElementById("icon").src =`png/${imageName}.png`
 }
 
+function setUnits(){
+    let currentUnit = document.getElementById("temperature").innerHTML.slice(-1);
+
+    if(currentUnit === 'C'){
+        const F = Number(degree) * 1.8 + 32;
+        document.getElementById("temperature").innerHTML = F.toFixed(2) + '°F';
+        currentUnit = 'F';
+    }
+    else{
+        const F = Number(degree) * 1.8 + 32;
+        const C = Number((F) - 32) / 1.8;
+        document.getElementById("temperature").innerHTML = C.toFixed(1) + '°C';
+        currentUnit = 'C';
+    }
+}
+
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
         lat = position.coords.latitude;
@@ -35,6 +52,7 @@ if (navigator.geolocation) {
         console.log(data);
         document.getElementById("timezone").innerHTML = data.data[0].timezone;
         document.getElementById("temperature").innerHTML = data.data[0].app_temp + "°C";
+        degree = data.data[0].app_temp;
         document.getElementById("description").innerHTML = data.data[0].weather.description;
 
         let today = new Date();
